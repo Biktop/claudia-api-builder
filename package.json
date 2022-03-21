@@ -1,5 +1,5 @@
 {
-  "name": "claudia-api-builder",
+  "name": "@b1kt0p/claudia-api-builder",
   "version": "4.1.2",
   "description": "Simplify AWS ApiGateway handling",
   "license": "MIT",
