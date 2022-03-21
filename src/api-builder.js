@@ -101,9 +101,7 @@ module.exports = function ApiBuilder(options) {
 		},
 		getSuccessBody = function (contentType, handlerResult) {
 			const contents = isApiResponse(handlerResult) ? handlerResult.response : handlerResult;
-			if (Buffer.isBuffer(contents)) {
-				return contents;
-			} else if (getCanonicalContentType(contentType) === 'application/json') {
+			if (!Buffer.isBuffer(contents) && getCanonicalContentType(contentType) === 'application/json') {
 				if (contents === '' || contents ===	undefined) {
 					return '{}';
 				} else {
