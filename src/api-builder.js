@@ -151,6 +151,9 @@ module.exports = function ApiBuilder(options) {
 			return resultType === 'success' ? getSuccessBody(contentType, handlerResult) : getErrorBody(contentType, handlerResult);
 		},
 		packResult = function (handlerResult, routingInfo, corsHeaders, resultType) {
+			const contents = isApiResponse(handlerResult) ? handlerResult.response : handlerResult;
+			const contentHandling = Buffer.isBuffer(contents) && 'CONVERT_TO_BINARY';
+
 			const path = routingInfo.path.replace(/^\//, ''),
 				method = routingInfo.method,
 				configuration = methodConfigurations[path] && methodConfigurations[path][method] && methodConfigurations[path][method][resultType],
@@ -162,7 +165,7 @@ module.exports = function ApiBuilder(options) {
 					headers: { 'Content-Type': contentType },
 					body: getBody(contentType, handlerResult, resultType)
 				};
-			if (configuration && configuration.contentHandling === 'CONVERT_TO_BINARY' && resultType === 'success') {
+			if ((configuration && configuration.contentHandling === 'CONVERT_TO_BINARY' && resultType === 'success') || contentHandling === 'CONVERT_TO_BINARY') {
 				result.isBase64Encoded = true;
 			}
 			mergeObjects(corsHeaders, result.headers);
